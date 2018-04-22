@@ -15,6 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import support.html.HtmlFormDataBuilder;
 import support.test.AcceptanceTest;
 
 import java.util.Arrays;
@@ -37,14 +38,11 @@ public class LoginAcceptanceTest extends AcceptanceTest {
 
     @Test
     public void login() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setAccept(Arrays.asList(MediaType.TEXT_HTML));
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-
-        MultiValueMap<String, Object> params = new LinkedMultiValueMap<>();
-        params.add("userId", "javajigi");
-        params.add("password", "test");
-        HttpEntity<MultiValueMap<String, Object>> request = new HttpEntity(params, headers);
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder
+                .urlEncodedForm()
+                .addParameter("userId", "javajigi")
+                .addParameter("password", "test")
+                .build();
 
         ResponseEntity<String> response = template().postForEntity("/login", request, String.class);
 
@@ -55,14 +53,11 @@ public class LoginAcceptanceTest extends AcceptanceTest {
 
     @Test
     public void login_fail() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setAccept(Arrays.asList(MediaType.TEXT_HTML));
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-
-        MultiValueMap<String, Object> params = new LinkedMultiValueMap<>();
-        params.add("userId", "javajigi");
-        params.add("password", "bad_password");
-        HttpEntity<MultiValueMap<String, Object>> request = new HttpEntity(params, headers);
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder
+                .urlEncodedForm()
+                .addParameter("userId", "javajigi")
+                .addParameter("password", "invalidPassword")
+                .build();
 
         ResponseEntity<String> response = template().postForEntity("/login", request, String.class);
 

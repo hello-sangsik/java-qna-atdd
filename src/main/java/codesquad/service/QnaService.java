@@ -1,21 +1,21 @@
 package codesquad.service;
 
-import java.util.List;
-
-import javax.annotation.Resource;
-
+import codesquad.CannotDeleteException;
+import codesquad.NotFoundException;
+import codesquad.UnAuthorizedException;
+import codesquad.domain.Answer;
+import codesquad.domain.AnswerRepository;
+import codesquad.domain.Question;
+import codesquad.domain.QuestionRepository;
+import codesquad.domain.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import codesquad.CannotDeleteException;
-import codesquad.domain.Answer;
-import codesquad.domain.AnswerRepository;
-import codesquad.domain.Question;
-import codesquad.domain.QuestionRepository;
-import codesquad.domain.User;
+import javax.annotation.Resource;
+import java.util.List;
 
 @Service("qnaService")
 public class QnaService {
@@ -40,14 +40,24 @@ public class QnaService {
         return questionRepository.findOne(id);
     }
 
-    public Question update(User loginUser, long id, Question updatedQuestion) {
-        // TODO 수정 기능 구현
-        return null;
+    public Question findById(User loginUser, long id) throws NotFoundException {
+        Question question = questionRepository.findById(id).orElseThrow(NotFoundException::new);
+        if (!question.isOwner(loginUser)) {
+            throw new UnAuthorizedException();
+        }
+        return question;
+    }
+
+    public Question update(User loginUser, long id, Question updatedQuestion) throws NotFoundException {
+        Question question = questionRepository.findById(id).orElseThrow(NotFoundException::new);
+        question.update(loginUser, updatedQuestion);
+        return questionRepository.save(question);
     }
 
     @Transactional
     public void deleteQuestion(User loginUser, long questionId) throws CannotDeleteException {
-        // TODO 삭제 기능 구현
+        Question question = questionRepository.findById(questionId).orElseThrow(CannotDeleteException::new);
+        question.delete(loginUser);
     }
 
     public Iterable<Question> findAll() {

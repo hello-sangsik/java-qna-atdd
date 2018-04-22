@@ -30,7 +30,7 @@ public class LoginAcceptanceTest extends AcceptanceTest {
 
     @Test
     public void login_form() {
-        ResponseEntity<String> response = template().getForEntity("/users/login", String.class);
+        ResponseEntity<String> response = template().getForEntity("/login", String.class);
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
         log.debug("body : {}", response.getBody());
     }
@@ -46,7 +46,7 @@ public class LoginAcceptanceTest extends AcceptanceTest {
         params.add("password", "test");
         HttpEntity<MultiValueMap<String, Object>> request = new HttpEntity(params, headers);
 
-        ResponseEntity<String> response = template().postForEntity("/users/login", request, String.class);
+        ResponseEntity<String> response = template().postForEntity("/login", request, String.class);
 
         assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
         log.debug("body : {}", response.getBody());
@@ -64,7 +64,7 @@ public class LoginAcceptanceTest extends AcceptanceTest {
         params.add("password", "bad_password");
         HttpEntity<MultiValueMap<String, Object>> request = new HttpEntity(params, headers);
 
-        ResponseEntity<String> response = template().postForEntity("/users/login", request, String.class);
+        ResponseEntity<String> response = template().postForEntity("/login", request, String.class);
 
         assertThat(response.getStatusCode(), is(HttpStatus.UNAUTHORIZED));
     }

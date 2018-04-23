@@ -149,7 +149,7 @@ public class QuestionAcceptanceTest extends AcceptanceTest {
     private ResponseEntity<String> update(TestRestTemplate template) {
         HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder
                 .urlEncodedForm()
-                .addParameter("_method", "put")
+                .put()
                 .addParameter("title", "제목 수정 테스트")
                 .addParameter("contents", "내용 수정 테스트")
                 .build();

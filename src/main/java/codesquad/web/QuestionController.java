@@ -1,7 +1,5 @@
 package codesquad.web;
 
-import codesquad.CannotDeleteException;
-import codesquad.NotFoundException;
 import codesquad.domain.Question;
 import codesquad.domain.User;
 import codesquad.dto.QuestionDto;
@@ -47,20 +45,20 @@ public class QuestionController {
     }
 
     @GetMapping("/{id}/form")
-    public String updateForm(@LoginUser User loginUser, @PathVariable long id, Model model) throws NotFoundException {
-        Question question = qnaService.findById(loginUser, id);
+    public String updateForm(@LoginUser User loginUser, @PathVariable long id, Model model) {
+        Question question = qnaService.findByIdForUpdate(loginUser, id);
         model.addAttribute("question", question);
         return "/qna/updateForm";
     }
 
     @PutMapping("/{id}")
-    public String update(@LoginUser User loginUser, @PathVariable long id, QuestionDto questionDto) throws NotFoundException {
+    public String update(@LoginUser User loginUser, @PathVariable long id, QuestionDto questionDto) {
         qnaService.update(loginUser, id, questionDto.toQuestion());
         return "redirect:/";
     }
 
     @DeleteMapping("/{id}")
-    public String delete(@LoginUser User loginUser, @PathVariable long id) throws CannotDeleteException {
+    public String delete(@LoginUser User loginUser, @PathVariable long id) {
         qnaService.deleteQuestion(loginUser, id);
         return "redirect:/";
     }

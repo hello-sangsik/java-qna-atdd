@@ -25,6 +25,10 @@ public class HtmlFormDataBuilder {
         return this;
     }
 
+    public HtmlFormDataBuilder put() {
+        return addParameter("_method", "put");
+    }
+
     public HttpEntity<MultiValueMap<String, Object>> build() {
         return new HttpEntity<MultiValueMap<String, Object>>(params, headers);
     }

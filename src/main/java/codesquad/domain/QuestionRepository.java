@@ -8,7 +8,5 @@ import java.util.Optional;
 public interface QuestionRepository extends JpaRepository<Question, Long> {
     List<Question> findByDeleted(boolean deleted);
 
-    List<Question> findByTitle(String title);
-
     Optional<Question> findById(long questionId);
 }

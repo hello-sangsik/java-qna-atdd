@@ -169,7 +169,9 @@ public class QuestionAcceptanceTest extends AcceptanceTest {
     @Test
     public void delete() {
         ResponseEntity<String> response = delete(basicAuthTemplate());
+        Question deletedQuestion = questionRepository.findOne(testQuestion.getId());
 
+        assertThat(deletedQuestion.isDeleted(), is(Boolean.TRUE));
         assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
         assertThat(response.getHeaders().getLocation().getPath(), is("/"));
     }

@@ -51,7 +51,7 @@ public class QnaServiceTest {
     }
 
     @Test(expected = UnAuthorizedException.class)
-    public void update_fail() {
+    public void update_fail_another_user_try() {
         when(questionRepository.findById(defaultQuestion.getId())).thenReturn(Optional.of(defaultQuestion));
 
         Question updatedQuestion = new Question("제목 수정", "내용 수정");
@@ -67,7 +67,7 @@ public class QnaServiceTest {
     }
 
     @Test(expected = UnAuthorizedException.class)
-    public void delete_fail() {
+    public void delete_fail_another_user_try() {
         when(questionRepository.findById(defaultQuestion.getId())).thenReturn(Optional.of(defaultQuestion));
 
         qnaService.deleteQuestion(anotherUser, defaultQuestion.getId());

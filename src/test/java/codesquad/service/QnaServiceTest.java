@@ -20,6 +20,7 @@ import static org.mockito.Mockito.when;
 /**
  * @author sangsik.kim
  */
+@Deprecated
 @RunWith(MockitoJUnitRunner.class)
 public class QnaServiceTest {
 

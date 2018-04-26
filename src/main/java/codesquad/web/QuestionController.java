@@ -34,26 +34,26 @@ public class QuestionController {
 
     @GetMapping("/{id}")
     public String show(@PathVariable long id, Model model) {
-        model.addAttribute("question", qnaService.findById(id).toQuestionDto());
+        model.addAttribute("question", qnaService.findQuestionById(id).toQuestionDto());
         return "/qna/show";
     }
 
     @PostMapping
     public String create(@LoginUser User loginUser, QuestionDto questionDto) {
-        qnaService.create(loginUser, questionDto.toQuestion());
+        qnaService.createQuestion(loginUser, questionDto.toQuestion());
         return "redirect:/";
     }
 
     @GetMapping("/{id}/form")
     public String updateForm(@LoginUser User loginUser, @PathVariable long id, Model model) {
-        Question question = qnaService.findByIdForUpdate(loginUser, id);
+        Question question = qnaService.findQuestionByIdForUpdate(loginUser, id);
         model.addAttribute("question", question);
         return "/qna/updateForm";
     }
 
     @PutMapping("/{id}")
     public String update(@LoginUser User loginUser, @PathVariable long id, QuestionDto questionDto) {
-        qnaService.update(loginUser, id, questionDto.toQuestion());
+        qnaService.updateQuestion(loginUser, id, questionDto.toQuestion());
         return "redirect:/";
     }
 

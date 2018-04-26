@@ -1,6 +1,5 @@
 package codesquad.domain;
 
-import codesquad.CannotDeleteException;
 import codesquad.UnAuthorizedException;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,7 +10,7 @@ import static org.junit.Assert.assertThat;
 /**
  * @author sangsik.kim
  */
-public class QuestionTest {
+public class AnswerTest {
     private User DEFAULT_USER;
     private User ANOTHER_USER;
     private Question DEFAULT_QUESTION;
@@ -25,35 +24,31 @@ public class QuestionTest {
         DEFAULT_ANSWER = new Answer(0, DEFAULT_USER, "테스트 답글");
     }
 
+
     @Test
     public void update_owner() throws Exception {
-        Question editedQuestion = new Question("제목 수정", "내용 수정");
-        DEFAULT_QUESTION.update(DEFAULT_USER, editedQuestion);
+        DEFAULT_QUESTION.addAnswer(DEFAULT_ANSWER);
+        DEFAULT_ANSWER.update(DEFAULT_USER, "답글 변경");
 
-        assertThat(DEFAULT_QUESTION.getTitle(), is(editedQuestion.getTitle()));
-        assertThat(DEFAULT_QUESTION.getContents(), is(editedQuestion.getContents()));
+        assertThat(DEFAULT_ANSWER.getContents(), is("답글 변경"));
     }
 
     @Test(expected = UnAuthorizedException.class)
     public void update_not_owner() {
-        Question editedQuestion = new Question("제목 수정", "내용 수정");
-        DEFAULT_QUESTION.update(ANOTHER_USER, editedQuestion);
+        DEFAULT_QUESTION.addAnswer(DEFAULT_ANSWER);
+        DEFAULT_ANSWER.update(ANOTHER_USER, "답글 변경");
+
+        assertThat(DEFAULT_ANSWER.getContents(), is("답글 변경"));
     }
 
     @Test
     public void delete_success() {
-        DEFAULT_QUESTION.delete(DEFAULT_USER);
-        assertThat(DEFAULT_QUESTION.isDeleted(), is(Boolean.TRUE));
+        DEFAULT_ANSWER.delete(DEFAULT_USER);
+        assertThat(DEFAULT_ANSWER.isDeleted(), is(Boolean.TRUE));
     }
 
     @Test(expected = UnAuthorizedException.class)
     public void delete_not_owner() {
-        DEFAULT_QUESTION.delete(ANOTHER_USER);
-    }
-
-    @Test(expected = CannotDeleteException.class)
-    public void delete_if_has_answer() {
-        DEFAULT_QUESTION.addAnswer(DEFAULT_ANSWER);
-        DEFAULT_QUESTION.delete(DEFAULT_USER);
+        DEFAULT_ANSWER.delete(ANOTHER_USER);
     }
 }

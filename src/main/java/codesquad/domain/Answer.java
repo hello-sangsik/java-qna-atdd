@@ -1,14 +1,16 @@
 package codesquad.domain;
 
+import codesquad.UnAuthorizedException;
+import codesquad.dto.AnswerDto;
+import support.domain.AbstractEntity;
+import support.domain.UrlGeneratable;
+
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.Size;
-
-import support.domain.AbstractEntity;
-import support.domain.UrlGeneratable;
 
 @Entity
 public class Answer extends AbstractEntity implements UrlGeneratable {
@@ -34,7 +36,13 @@ public class Answer extends AbstractEntity implements UrlGeneratable {
         this.contents = contents;
     }
 
-    public Answer(Long id, User writer, Question question, String contents) {
+    public Answer(long id, User writer, String contents) {
+        super(id);
+        this.writer = writer;
+        this.contents = contents;
+    }
+
+    public Answer(long id, User writer, Question question, String contents) {
         super(id);
         this.writer = writer;
         this.question = question;
@@ -74,5 +82,25 @@ public class Answer extends AbstractEntity implements UrlGeneratable {
     @Override
     public String toString() {
         return "Answer [id=" + getId() + ", writer=" + writer + ", contents=" + contents + "]";
+    }
+
+    public void update(User loginUser, String contents) {
+        if (!isOwner(loginUser)) {
+            throw new UnAuthorizedException();
+        }
+
+        this.contents = contents;
+    }
+
+    public AnswerDto toAnswerDto() {
+        return new AnswerDto(this);
+    }
+
+    public void delete(User loginUser) {
+        if (!isOwner(loginUser)) {
+            throw new UnAuthorizedException();
+        }
+
+        this.deleted = true;
     }
 }
